@@ -11,11 +11,12 @@ global:
 alerting:
     alertmanagers:
         - static_configs:
-              - targets:
+              - targets: ["47.97.161.236:9093"]
                 # - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
+    - "node_down.yml"
     # - "first_rules.yml"
     # - "second_rules.yml"
 
@@ -31,7 +32,9 @@ scrape_configs:
 
       static_configs: # 静态目标的配置
           - targets: ["localhost:9090"]
-
+    - job_name: "cadvisor"
+      static_configs:
+          - targets: ["47.97.161.236:8080"]
     - job_name: "node" # 一定要全局唯一, 采集本机的 metrics，需要在本机安装 node_exporter
       metrics_path: "/prometheus"
       static_configs:
