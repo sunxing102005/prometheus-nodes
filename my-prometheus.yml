@@ -41,3 +41,9 @@ scrape_configs:
           - targets: ["47.97.161.236:3002"]
             labels:
                 instance: node1
+    - job_name: "node2" # 一定要全局唯一, 采集本机的 metrics，需要在本机安装 node_exporter
+      metrics_path: "/prometheus"
+      static_configs:
+          - targets: ["47.97.161.236:3005"]
+            labels:
+                instance: node2
