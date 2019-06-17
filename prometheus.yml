@@ -1,0 +1,49 @@
+# my global config
+global:
+    #数据采集的频率：每15s去监控机上采样一次
+    scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+    #监控数据规则的评估：多久进行一次监控的评估
+    evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+    # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+#用户管理，发出警报的插件
+alerting:
+    alertmanagers:
+        - static_configs:
+              - targets: ["47.97.161.236:9093"]
+                # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+    - "node_down.yml"
+    # - "first_rules.yml"
+    # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+    # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+
+    - job_name: "prometheus" #  ## 一定要全局唯一, 采集 Prometheus 自身的 metrics
+
+      # metrics_path defaults to '/metrics'
+      # scheme defaults to 'http'.
+
+      static_configs: # 静态目标的配置
+          - targets: ["localhost:9090"]
+    - job_name: "cadvisor"
+      static_configs:
+          - targets: ["172.16.125.21:8080"]
+    - job_name: "node" # 一定要全局唯一, 采集本机的 metrics，需要在本机安装 node_exporter
+      metrics_path: "/prometheus"
+      static_configs:
+          - targets: ["172.16.125.21:3002"]
+            labels:
+                instance: node1
+    - job_name: "node2" # 一定要全局唯一, 采集本机的 metrics，需要在本机安装 node_exporter
+      metrics_path: "/prometheus"
+      static_configs:
+          - targets: ["172.16.125.21:3005"]
+            labels:
+                instance: node2

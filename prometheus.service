@@ -1,0 +1,15 @@
+vim /etc/systemd/system/prometheus.service
+
+[Unit]
+Description=Prometheus
+Documentation=https://prometheus.io/
+After=network.target
+
+[Service]
+Type=simple
+User=prometheus
+ExecStart=/root/prometheus-2.10/bin/prometheus --config.file=/root/prometheus-2.10/cfg/prometheus.yml --storage.tsdb.path=/root/prometheus-2.10/data
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
